@@ -22,43 +22,40 @@ export class PinguimService {
     return this.pinguimModel.find();
   }
 
-  async getPinguim(pinguimNome: string): Promise<PinguimInterface> {
-    const expectedPinguim = await this.pinguimModel
-      .findOne({ nome: pinguimNome })
-      .exec();
+  async getPinguim(pinguimId: string): Promise<PinguimInterface> {
+    const expectedPinguim = await this.pinguimModel.findById(pinguimId).exec();
 
     if (!expectedPinguim) {
-      throw new NotFoundException(`Pinguim com nome ${pinguimNome} não existe`);
+      throw new NotFoundException(`Pinguim com id ${pinguimId} não existe`);
     } else {
       return expectedPinguim;
     }
   }
 
-  async deletePinguim(pinguimNome: string): Promise<PinguimInterface> {
+  async deletePinguim(pinguimId: string): Promise<PinguimInterface> {
     const deletedPinguim = await this.pinguimModel
-      .findOneAndDelete({ nome: pinguimNome })
+      .findByIdAndDelete(pinguimId)
       .exec();
 
     if (!deletedPinguim) {
-      throw new NotFoundException(`Pinguim com nome ${pinguimNome} não existe`);
+      throw new NotFoundException(`Pinguim com id ${pinguimId} não existe`);
     } else {
       return deletedPinguim;
     }
   }
 
   async updatePinguim(
+    pinguimId: string,
     updatePinguimDto: UpdatePinguimDto,
   ): Promise<PinguimInterface> {
     const updatedPinguim = await this.pinguimModel
-      .findOneAndUpdate({ nome: updatePinguimDto.nome }, updatePinguimDto, {
+      .findByIdAndUpdate(pinguimId, updatePinguimDto, {
         new: true,
       })
       .exec();
 
     if (!updatedPinguim) {
-      throw new NotFoundException(
-        `Pinguim com nome ${updatePinguimDto.nome} não existe`,
-      );
+      throw new NotFoundException(`Pinguim com id ${pinguimId} não existe`);
     } else {
       return updatedPinguim;
     }

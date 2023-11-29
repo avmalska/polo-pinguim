@@ -35,31 +35,31 @@ export class PinguimController {
     return response.status(HttpStatus.OK).json(pinguimData);
   }
 
-  @Get('/:nome')
-  async getPinguim(
-    @Res() response: Response,
-    @Param('nome') pinguimNome: string,
-  ) {
-    const pinguimData = await this.pinguimService.getPinguim(pinguimNome);
+  @Get('/:id')
+  async getPinguim(@Res() response: Response, @Param('id') pinguimId: string) {
+    const pinguimData = await this.pinguimService.getPinguim(pinguimId);
     return response.status(HttpStatus.OK).json(pinguimData);
   }
 
-  @Delete('/:nome')
+  @Delete('/:id')
   async deletePinguim(
     @Res() response: Response,
-    @Param('nome') pinguimNome: string,
+    @Param('id') pinguimId: string,
   ) {
-    const deletedPinguim = await this.pinguimService.deletePinguim(pinguimNome);
+    const deletedPinguim = await this.pinguimService.deletePinguim(pinguimId);
     return response.status(HttpStatus.OK).json(deletedPinguim);
   }
 
-  @Put()
+  @Put('/:id')
   async updatePinguim(
     @Res() response: Response,
     @Body() updatePinguimDto: UpdatePinguimDto,
+    @Param('id') pinguimId: string,
   ) {
-    const updatedPinguim =
-      await this.pinguimService.updatePinguim(updatePinguimDto);
+    const updatedPinguim = await this.pinguimService.updatePinguim(
+      pinguimId,
+      updatePinguimDto,
+    );
     return response.status(HttpStatus.OK).json(updatedPinguim);
   }
 }
