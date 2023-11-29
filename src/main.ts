@@ -11,7 +11,6 @@ async function bootstrap() {
     .setTitle('Polo Pinguim')
     .setDescription('CRUD de Pinguins')
     .setVersion('1.0')
-    .addTag('pinguins')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
