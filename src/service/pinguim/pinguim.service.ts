@@ -1,63 +1,38 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreatePinguimDto } from '../../dto/create-pinguim.dto';
-import { PinguimInterface } from '../../interface/pinguim.interface';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { UpdatePinguimDto } from '../../dto/update-pinguim.dto';
+import { Injectable } from '@nestjs/common';
+import { CreatePinguimRequest } from '../../dto/request/create-pinguim.request';
+import { UpdatePinguimRequest } from '../../dto/request/update-pinguim.request';
+import { PinguimMongoRepositoryImpl } from '../../repository/pinguim-mongo.repository-impl';
+import { PinguimResponse } from '../../dto/response/pinguim.response';
+import { PinguimPostgresRepositoryImpl } from '../../repository/pinguim-postgres.repository-impl';
 
 @Injectable()
 export class PinguimService {
   constructor(
-    @InjectModel('Pinguim') private pinguimModel: Model<PinguimInterface>,
+    private readonly pinguimRepository: PinguimPostgresRepositoryImpl,
   ) {}
 
   async createPinguim(
-    createPinguimDto: CreatePinguimDto,
-  ): Promise<PinguimInterface> {
-    const newPinguim = new this.pinguimModel(createPinguimDto);
-    return newPinguim.save();
+    createPinguimRequest: CreatePinguimRequest,
+  ): Promise<PinguimResponse> {
+    return this.pinguimRepository.create(createPinguimRequest);
   }
 
-  async getPinguins(): Promise<PinguimInterface[]> {
-    return this.pinguimModel.find();
+  async getPinguins(): Promise<PinguimResponse[]> {
+    return this.pinguimRepository.findAll();
   }
 
-  async getPinguim(pinguimId: string): Promise<PinguimInterface> {
-    const expectedPinguim = await this.pinguimModel.findById(pinguimId).exec();
-
-    if (!expectedPinguim) {
-      throw new NotFoundException(`Pinguim com id ${pinguimId} não existe`);
-    } else {
-      return expectedPinguim;
-    }
+  async getPinguim(pinguimId: string): Promise<PinguimResponse> {
+    return this.pinguimRepository.findOne(pinguimId);
   }
 
-  async deletePinguim(pinguimId: string): Promise<PinguimInterface> {
-    const deletedPinguim = await this.pinguimModel
-      .findByIdAndDelete(pinguimId)
-      .exec();
-
-    if (!deletedPinguim) {
-      throw new NotFoundException(`Pinguim com id ${pinguimId} não existe`);
-    } else {
-      return deletedPinguim;
-    }
+  async deletePinguim(pinguimId: string): Promise<PinguimResponse> {
+    return this.pinguimRepository.delete(pinguimId);
   }
 
   async updatePinguim(
     pinguimId: string,
-    updatePinguimDto: UpdatePinguimDto,
-  ): Promise<PinguimInterface> {
-    const updatedPinguim = await this.pinguimModel
-      .findByIdAndUpdate(pinguimId, updatePinguimDto, {
-        new: true,
-      })
-      .exec();
-
-    if (!updatedPinguim) {
-      throw new NotFoundException(`Pinguim com id ${pinguimId} não existe`);
-    } else {
-      return updatedPinguim;
-    }
+    updatePinguimDto: UpdatePinguimRequest,
+  ): Promise<PinguimResponse> {
+    return this.pinguimRepository.update(pinguimId, updatePinguimDto);
   }
 }

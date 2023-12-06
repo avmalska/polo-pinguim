@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumber, IsString, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreatePinguimDto {
+export class CreatePinguimRequest {
   @ApiProperty({ example: 'Andrey' })
   @IsNotEmpty()
   @IsString()

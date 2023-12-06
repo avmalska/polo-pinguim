@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
 
 export interface PinguimInterface extends Document {
-  id: number;
+  id: string;
   nome: string;
   idade: number;
 }

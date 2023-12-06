@@ -10,9 +10,9 @@ import {
   Res,
 } from '@nestjs/common';
 import { PinguimService } from '../../service/pinguim/pinguim.service';
-import { CreatePinguimDto } from '../../dto/create-pinguim.dto';
+import { CreatePinguimRequest } from '../../dto/request/create-pinguim.request';
 import { Response } from 'express';
-import { UpdatePinguimDto } from '../../dto/update-pinguim.dto';
+import { UpdatePinguimRequest } from '../../dto/request/update-pinguim.request';
 
 @Controller('pinguim')
 export class PinguimController {
@@ -21,7 +21,7 @@ export class PinguimController {
   @Post()
   async createPinguim(
     @Res() response: Response,
-    @Body() createPinguimDto: CreatePinguimDto,
+    @Body() createPinguimDto: CreatePinguimRequest,
   ) {
     const newPinguim =
       await this.pinguimService.createPinguim(createPinguimDto);
@@ -53,7 +53,7 @@ export class PinguimController {
   @Put('/:id')
   async updatePinguim(
     @Res() response: Response,
-    @Body() updatePinguimDto: UpdatePinguimDto,
+    @Body() updatePinguimDto: UpdatePinguimRequest,
     @Param('id') pinguimId: string,
   ) {
     const updatedPinguim = await this.pinguimService.updatePinguim(
